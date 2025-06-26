@@ -1,0 +1,232 @@
+<div class="friends-container">
+  <!-- Header -->
+  <mat-card class="friends-header-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>people</mat-icon>
+      <mat-card-title>Friends & Social</mat-card-title>
+      <mat-card-subtitle>Manage your friends and connections</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions align="end">
+      <button mat-raised-button routerLink="/dashboard">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Dashboard
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Error Banner -->
+  <mat-card *ngIf="error()" class="error-card" appearance="outlined">
+    <mat-card-content>
+      <div class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <span>{{ error() }}</span>
+        <button mat-icon-button (click)="clearError()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <mat-card *ngIf="loading()" class="loading-card">
+    <mat-card-content class="loading-content">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading friends data...</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Main Content with Tabs -->
+  <mat-card *ngIf="!loading()" class="main-content-card">
+    <mat-tab-group [selectedIndex]="selectedTabIndex()" (selectedTabChange)="onTabChange($event)">
+      
+      <!-- My Friends Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <mat-icon>people</mat-icon>
+            <span>My Friends</span>
+            <div *ngIf="friends().length > 0" 
+                 matBadge="{{ friends().length }}" 
+                 matBadgeColor="primary" 
+                 matBadgeSize="small"
+                 class="badge-container"></div>
+          </div>
+        </ng-template>
+        
+        <div class="tab-content">
+          <div class="section-header">
+            <h2>Your Friends</h2>
+            <button mat-raised-button color="primary" (click)="loadAllData()">
+              <mat-icon>refresh</mat-icon>
+              Refresh
+            </button>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="friends().length === 0" class="empty-state">
+            <mat-icon class="empty-icon">sentiment_dissatisfied</mat-icon>
+            <h3>No friends yet</h3>
+            <p>Start by discovering new people or check your friend requests!</p>
+            <button mat-raised-button color="primary" (click)="setCurrentTab('discover')">
+              <mat-icon>search</mat-icon>
+              Discover People
+            </button>
+          </div>
+
+          <!-- Friends Grid -->
+          <div *ngIf="friends().length > 0" class="friends-grid">
+            <mat-card *ngFor="let friend of friends()" class="friend-card" appearance="outlined">
+              <mat-card-header>
+                <div mat-card-avatar class="friend-avatar">
+                  {{ friend.username.charAt(0).toUpperCase() }}
+                </div>
+                <mat-card-title>{{ friend.username }}</mat-card-title>
+                <mat-card-subtitle>{{ friend.email }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions align="end">
+                <button mat-icon-button color="warn" (click)="removeFriend(friend.id)" 
+                        matTooltip="Remove friend" aria-label="Remove friend">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Requests Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <mat-icon>inbox</mat-icon>
+            <span>Requests</span>
+            <div *ngIf="(receivedRequests().length + sentRequests().length) > 0" 
+                 matBadge="{{ receivedRequests().length + sentRequests().length }}" 
+                 matBadgeColor="accent" 
+                 matBadgeSize="small"
+                 class="badge-container"></div>
+          </div>
+        </ng-template>
+        
+        <div class="tab-content">
+          <!-- Received Requests -->
+          <div class="requests-section">
+            <h2>Received Requests ({{ receivedRequests().length }})</h2>
+            
+            <div *ngIf="receivedRequests().length === 0" class="empty-state">
+              <mat-icon class="empty-icon">inbox</mat-icon>
+              <p>No pending friend requests</p>
+            </div>
+
+            <div *ngIf="receivedRequests().length > 0" class="requests-list">
+              <mat-card *ngFor="let request of receivedRequests()" class="request-card received" appearance="outlined">
+                <mat-card-header>
+                  <div mat-card-avatar class="user-avatar">
+                    {{ request.sender.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <mat-card-title>{{ request.sender.username }}</mat-card-title>
+                  <mat-card-subtitle>{{ request.sender.email }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="request-date">{{ formatDate(request.requestTime) }}</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-raised-button color="primary" (click)="acceptFriendRequest(request.id)">
+                    <mat-icon>check</mat-icon>
+                    Accept
+                  </button>
+                  <button mat-button color="warn" (click)="declineFriendRequest(request.id)">
+                    <mat-icon>close</mat-icon>
+                    Decline
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Sent Requests -->
+          <div class="requests-section">
+            <h2>Sent Requests ({{ sentRequests().length }})</h2>
+            
+            <div *ngIf="sentRequests().length === 0" class="empty-state">
+              <mat-icon class="empty-icon">outbox</mat-icon>
+              <p>No outgoing friend requests</p>
+            </div>
+
+            <div *ngIf="sentRequests().length > 0" class="requests-list">
+              <mat-card *ngFor="let request of sentRequests()" class="request-card sent" appearance="outlined">
+                <mat-card-header>
+                  <div mat-card-avatar class="user-avatar">
+                    {{ request.receiver.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <mat-card-title>{{ request.receiver.username }}</mat-card-title>
+                  <mat-card-subtitle>{{ request.receiver.email }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="request-date">Sent on {{ formatDate(request.requestTime) }}</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button color="warn" (click)="cancelFriendRequest(request.id)">
+                    <mat-icon>cancel</mat-icon>
+                    Cancel
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Discover Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <mat-icon>search</mat-icon>
+            <span>Discover People</span>
+            <div *ngIf="usersToDiscover().length > 0" 
+                 matBadge="{{ usersToDiscover().length }}" 
+                 matBadgeColor="accent" 
+                 matBadgeSize="small"
+                 class="badge-container"></div>
+          </div>
+        </ng-template>
+        
+        <div class="tab-content">
+          <div class="section-header">
+            <h2>Discover New People</h2>
+            <button mat-raised-button color="primary" (click)="loadAllData()">
+              <mat-icon>refresh</mat-icon>
+              Refresh
+            </button>
+          </div>
+          
+          <div *ngIf="usersToDiscover().length === 0" class="empty-state">
+            <mat-icon class="empty-icon">explore</mat-icon>
+            <h3>No new people to discover</h3>
+            <p>You've already connected with everyone or sent friend requests to all available users!</p>
+          </div>
+
+          <div *ngIf="usersToDiscover().length > 0" class="users-grid">
+            <mat-card *ngFor="let user of usersToDiscover()" class="user-card" appearance="outlined">
+              <mat-card-header>
+                <div mat-card-avatar class="user-avatar">
+                  {{ user.username.charAt(0).toUpperCase() }}
+                </div>
+                <mat-card-title>{{ user.username }}</mat-card-title>
+                <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions align="end">
+                <button mat-raised-button color="primary" (click)="sendFriendRequest(user.id)">
+                  <mat-icon>person_add</mat-icon>
+                  Send Request
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

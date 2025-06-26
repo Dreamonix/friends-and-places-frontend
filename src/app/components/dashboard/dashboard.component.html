@@ -1,0 +1,88 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Welcome to Friends & Places</h1>
+    <div class="user-info" *ngIf="user() as currentUser">
+      <span>{{ currentUser.username }}</span>
+      <button (click)="onLogout()" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="dashboard-grid">
+      <!-- User Profile Card -->
+      <div class="card user-card">
+        <h2>Your Profile</h2>
+        <div *ngIf="user() as currentUser; else noUserData" class="user-details">
+          <p><strong>Email:</strong> {{ currentUser.email }}</p>
+          
+        </div>
+        <ng-template #noUserData>
+          <div class="no-data">
+            <p>Loading user data...</p>
+            <p><small>If this persists, please check browser console for JWT token details.</small></p>
+            <button (click)="debugAuthState()" class="debug-btn">Debug Auth State</button>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Friends Map Card -->
+      <div class="card map-card">
+        <app-friends-map></app-friends-map>
+      </div>
+
+      <!-- API Test Card -->
+      <div class="card api-test-card">
+        <h2>API Connection Test</h2>
+        <div class="test-controls">
+          <button (click)="testSecuredEndpoint()" [disabled]="testLoading()" class="test-btn">
+            {{ testLoading() ? 'Testing...' : 'Test Secured Endpoint' }}
+          </button>
+          <div *ngIf="testResult()" class="test-result" 
+               [class.success]="testResult()?.success" 
+               [class.error]="!testResult()?.success">
+            {{ testResult()?.message }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Authentication Status Card -->
+      <div class="card auth-status-card">
+        <h2>Authentication Status</h2>
+        <div class="auth-info">
+          <p><strong>Status:</strong> 
+            <span class="status-badge authenticated">Authenticated</span>
+          </p>
+          <p><strong>Token Valid:</strong> {{ tokenValid() ? 'Yes' : 'No' }}</p>
+          <p><strong>Login Time:</strong> {{ currentLoginTime() }}</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions Card -->
+      <div class="card actions-card">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="loadFriends()">
+            🫂 Manage Friends
+          </button>
+          <button class="action-btn" (click)="loadPlaces()">
+            My Places
+          </button>
+          <button class="action-btn" (click)="loadAvailableUsers()">
+            Find Users
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer Info Section -->
+    <section class="dev-info">
+      <h3>🛠️ Development Information</h3>
+      <div class="dev-details">
+        <p><strong>Proxy Status:</strong> ✅ Working (requests forwarding to localhost:8080)</p>
+        <p><strong>Authentication:</strong> ✅ JWT-based with auto-expiration checking</p>
+        <p><strong>Modern Angular Features:</strong> ✅ Signals, inject(), functional guards & interceptors</p>
+        <p><strong>Note:</strong> Backend error "Failed to find user 'test&#64;example.com'" is expected when testing with non-existent users.</p>
+      </div>
+    </section>
+  </main>
+</div>
