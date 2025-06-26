@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, EMPTY } from 'rxjs';
 import { map, tap, catchError, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { 
   User, 
   UserRegisterDTO, 
@@ -18,7 +19,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  private readonly API_BASE_URL = '/api/v1/auth';
+  private readonly API_BASE_URL = `${environment.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'fap_auth_token';
   private readonly USER_KEY = 'fap_current_user';
 

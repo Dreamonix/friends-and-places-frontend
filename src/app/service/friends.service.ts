@@ -2,13 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FriendRequestDTO, UserDTO } from './api.types';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendsService {
   private readonly http = inject(HttpClient);
-  private readonly API_BASE_URL = '/api/v1/friends';
+  private readonly API_BASE_URL = `${environment.apiUrl}/friends`;
 
   /**
    * Get all friends of the current user

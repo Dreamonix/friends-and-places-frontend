@@ -3,13 +3,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LocationCreateDTO, LocationResponseDTO } from './api.types';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlacesService {
   private readonly http = inject(HttpClient);
-  private readonly API_BASE_URL = '/api/v1/places';
+  private readonly API_BASE_URL = `${environment.apiUrl}/places`;
 
   /**
    * Get all locations for the authenticated user
