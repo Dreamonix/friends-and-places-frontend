@@ -1,10 +1,6 @@
 {
   "routes": [
     {
-      "route": "/.auth/**",
-      "allowedRoles": ["anonymous"]
-    },
-    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200
@@ -12,7 +8,7 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/images/*.{png,jpg,gif,ico}", "/css/*", "/js/*", "/*.{js,css,map,ico,png,jpg,gif,svg}"]
+    "exclude": ["/images/*", "/css/*", "/js/*", "*.js", "*.css", "*.map", "*.ico", "*.png", "*.jpg", "*.gif", "*.svg"]
   },
   "responseOverrides": {
     "404": {
