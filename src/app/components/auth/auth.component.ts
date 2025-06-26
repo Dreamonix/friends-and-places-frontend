@@ -141,7 +141,11 @@ function passwordValidator(control: AbstractControl) {
                 type="text" 
                 id="city" 
                 formControlName="city"
+                [class.error]="registerForm.get('city')?.invalid && registerForm.get('city')?.touched"
                 placeholder="Your city">
+              <div *ngIf="registerForm.get('city')?.invalid && registerForm.get('city')?.touched" class="field-error">
+                <span *ngIf="registerForm.get('city')?.hasError('required')">City is required</span>
+              </div>
             </div>
 
             <div class="form-group half">
@@ -150,7 +154,53 @@ function passwordValidator(control: AbstractControl) {
                 type="text" 
                 id="zipCode" 
                 formControlName="zipCode"
+                [class.error]="registerForm.get('zipCode')?.invalid && registerForm.get('zipCode')?.touched"
                 placeholder="ZIP code">
+              <div *ngIf="registerForm.get('zipCode')?.invalid && registerForm.get('zipCode')?.touched" class="field-error">
+                <span *ngIf="registerForm.get('zipCode')?.hasError('required')">ZIP code is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="street">Street</label>
+              <input 
+                type="text" 
+                id="street" 
+                formControlName="street"
+                [class.error]="registerForm.get('street')?.invalid && registerForm.get('street')?.touched"
+                placeholder="Street name">
+              <div *ngIf="registerForm.get('street')?.invalid && registerForm.get('street')?.touched" class="field-error">
+                <span *ngIf="registerForm.get('street')?.hasError('required')">Street is required</span>
+              </div>
+            </div>
+
+            <div class="form-group half">
+              <label for="houseNumber">House Number</label>
+              <input 
+                type="text" 
+                id="houseNumber" 
+                formControlName="houseNumber"
+                [class.error]="registerForm.get('houseNumber')?.invalid && registerForm.get('houseNumber')?.touched"
+                placeholder="House number">
+              <div *ngIf="registerForm.get('houseNumber')?.invalid && registerForm.get('houseNumber')?.touched" class="field-error">
+                <span *ngIf="registerForm.get('houseNumber')?.hasError('required')">House number is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="mobile">Mobile Phone</label>
+            <input 
+              type="tel" 
+              id="mobile" 
+              formControlName="mobile"
+              [class.error]="registerForm.get('mobile')?.invalid && registerForm.get('mobile')?.touched"
+              placeholder="Your mobile number"
+              autocomplete="tel">
+            <div *ngIf="registerForm.get('mobile')?.invalid && registerForm.get('mobile')?.touched" class="field-error">
+              <span *ngIf="registerForm.get('mobile')?.hasError('required')">Mobile number is required</span>
             </div>
           </div>
 
@@ -227,8 +277,11 @@ export class AuthComponent implements OnInit, OnDestroy {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, emailValidator]],
       password: ['', [Validators.required, passwordValidator]],
-      city: [''],
-      zipCode: ['']
+      city: ['', [Validators.required]],
+      zipCode: ['', [Validators.required]],
+      street: ['', [Validators.required]],
+      houseNumber: ['', [Validators.required]],
+      mobile: ['', [Validators.required]]
     });
   }
 
