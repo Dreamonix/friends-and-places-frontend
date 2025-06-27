@@ -78,16 +78,8 @@ export class DashboardComponent implements OnInit {
   }
 
   protected loadPlaces(): void {
-    this.placesService.getAllLocations().subscribe({
-      next: (places) => {
-        console.log('Places loaded:', places);
-        alert(`Loaded ${places.length} places`);
-      },
-      error: (error) => {
-        console.error('Error loading places:', error);
-        alert(`Error: ${error.message}`);
-      }
-    });
+    // Navigate to the dedicated places page
+    this.router.navigate(['/places']);
   }
 
   protected loadAvailableUsers(): void {

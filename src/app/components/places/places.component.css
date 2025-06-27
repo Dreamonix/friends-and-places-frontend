@@ -1,0 +1,245 @@
+.places-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.places-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.places-header h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.places-header p {
+  color: #666;
+  margin: 0.5rem 0 0 0;
+}
+
+.places-tabs {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tab-content {
+  padding: 1.5rem;
+}
+
+.location-form-card,
+.current-location-card,
+.history-card {
+  margin: 0;
+  box-shadow: none;
+}
+
+.quick-location {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.current-location-btn {
+  padding: 12px 24px;
+}
+
+.location-form {
+  margin-top: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.form-divider {
+  text-align: center;
+  position: relative;
+  margin: 1.5rem 0;
+  color: #666;
+}
+
+.form-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+  z-index: 1;
+}
+
+.form-divider span {
+  background: white;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.location-display {
+  text-align: center;
+}
+
+.location-info h3 {
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.address {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+}
+
+.coordinates {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+  font-family: monospace;
+  background: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.timestamp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #666;
+  margin: 1rem 0 0 0;
+}
+
+.no-location,
+.no-history {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-location mat-icon,
+.no-history mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #ccc;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.history-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.location-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.location-item:hover {
+  background-color: #f9f9f9;
+}
+
+.location-item:last-child {
+  border-bottom: none;
+}
+
+.location-icon {
+  flex-shrink: 0;
+  color: #2196F3;
+}
+
+.location-details {
+  flex: 1;
+}
+
+.location-details h4 {
+  margin: 0 0 0.25rem 0;
+  color: #333;
+}
+
+.location-details .address {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.location-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.location-meta .timestamp {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  justify-content: flex-start;
+}
+
+.coordinates {
+  font-family: monospace;
+}
+
+@media (max-width: 768px) {
+  .places-container {
+    padding: 1rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .half-width {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .coordinates {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .location-meta {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
