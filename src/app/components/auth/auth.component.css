@@ -232,12 +232,12 @@
   }
 }
 
-/* Loading States */
-.submit-btn:disabled {
+/* Loading States - Only show spinner when actually loading */
+.submit-btn.loading {
   position: relative;
 }
 
-.submit-btn:disabled::after {
+.submit-btn.loading::after {
   content: '';
   position: absolute;
   width: 16px;

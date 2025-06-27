@@ -70,8 +70,10 @@ function passwordValidator(control: AbstractControl) {
           <button 
             type="submit" 
             [disabled]="loginForm.invalid || isLoading()"
+            [class.loading]="isLoading()"
             class="submit-btn">
             {{ isLoading() ? 'Signing in...' : 'Sign In' }}
+            <!-- Debug: {{ 'DEBUG: isLoading=' + isLoading() + ', text=' + (isLoading() ? 'Signing in...' : 'Sign In') }} -->
           </button>
         </form>
 
@@ -207,8 +209,10 @@ function passwordValidator(control: AbstractControl) {
           <button 
             type="submit" 
             [disabled]="registerForm.invalid || isLoading()"
+            [class.loading]="isLoading()"
             class="submit-btn">
             {{ isLoading() ? 'Creating Account...' : 'Create Account' }}
+            <!-- Debug: {{ 'DEBUG: isLoading=' + isLoading() + ', text=' + (isLoading() ? 'Creating Account...' : 'Create Account') }} -->
           </button>
         </form>
 
@@ -231,17 +235,20 @@ function passwordValidator(control: AbstractControl) {
         <div *ngIf="successMessage()" class="success-message" role="status">
           {{ successMessage() }}
         </div>
-      </div>
-
-      <!-- Auth State Debug (development only) -->
-      <div *ngIf="authState$ | async as authState" class="auth-debug">
-        <h3>Authentication Status</h3>
-        <p><strong>Authenticated:</strong> {{ authState.isAuthenticated ? 'Yes' : 'No' }}</p>
-        <p *ngIf="authState.user"><strong>User:</strong> {{ authState.user.username }} ({{ authState.user.email }})</p>
-        <button *ngIf="authState.isAuthenticated" (click)="onLogout()" class="logout-btn">
-          Logout
-        </button>
-      </div>
+      </div>        <!-- Auth State Debug (development only) -->
+        <div *ngIf="authState$ | async as authState" class="auth-debug">
+          <h3>🔍 Debug Information</h3>
+          <div class="debug-info">
+            <p><strong>Loading State:</strong> {{ isLoading() }}</p>
+            <p><strong>Login Form Valid:</strong> {{ loginForm.valid }}</p>
+            <p><strong>Register Form Valid:</strong> {{ registerForm.valid }}</p>
+            <p><strong>Authenticated:</strong> {{ authState.isAuthenticated ? 'Yes' : 'No' }}</p>
+            <p *ngIf="authState.user"><strong>User:</strong> {{ authState.user.username }} ({{ authState.user.email }})</p>
+            <button type="button" (click)="debugComponentState()" class="debug-btn">Log State</button>
+            <button type="button" (click)="resetLoadingState()" class="debug-btn">Reset Loading</button>
+            <button *ngIf="authState.isAuthenticated" (click)="onLogout()" class="logout-btn">Logout</button>
+          </div>
+        </div>
     </div>
   `,
   styleUrls: ['./auth.component.css']
@@ -283,11 +290,21 @@ export class AuthComponent implements OnInit, OnDestroy {
       houseNumber: ['', [Validators.required]],
       mobile: ['', [Validators.required]]
     });
+
+    // Debug logging for loading state
+    console.log('AuthComponent: constructor - isLoading state:', this.isLoading());
   }
 
   ngOnInit(): void {
+    console.log('AuthComponent: ngOnInit - isLoading initial state:', this.isLoading());
     this.setupFormValidation();
     this.subscribeToAuthState();
+    
+    // Add a safety check to ensure loading state is false on init
+    if (this.isLoading()) {
+      console.warn('AuthComponent: Loading state was true on init, resetting to false');
+      this.isLoading.set(false);
+    }
   }
 
   ngOnDestroy(): void {
@@ -411,5 +428,32 @@ export class AuthComponent implements OnInit, OnDestroy {
   private clearMessages(): void {
     this.errorMessage.set('');
     this.successMessage.set('');
+  }
+
+  /**
+   * Debug method to log component state
+   */
+  protected debugComponentState(): void {
+    console.group('🔍 AuthComponent Debug State');
+    console.log('isLoading:', this.isLoading());
+    console.log('isLoginMode:', this.isLoginMode());
+    console.log('errorMessage:', this.errorMessage());
+    console.log('successMessage:', this.successMessage());
+    console.log('usernameAvailable:', this.usernameAvailable());
+    console.log('emailAvailable:', this.emailAvailable());
+    console.log('loginForm valid:', this.loginForm.valid);
+    console.log('loginForm errors:', this.loginForm.errors);
+    console.log('registerForm valid:', this.registerForm.valid);
+    console.log('registerForm errors:', this.registerForm.errors);
+    console.groupEnd();
+  }
+
+  /**
+   * Emergency method to reset loading state if it gets stuck
+   */
+  protected resetLoadingState(): void {
+    this.isLoading.set(false);
+    this.clearMessages();
+    console.log('🔄 Loading state reset to false');
   }
 }
